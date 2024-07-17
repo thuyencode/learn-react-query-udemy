@@ -22,7 +22,17 @@
       "path": "."
     }
   ],
-  "settings": {},
+  "settings": {
+    "prettier.semi": false,
+    "prettier.singleQuote": true,
+    "prettier.jsxSingleQuote": true,
+    "prettier.trailingComma": "none",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "always",
+      "source.organizeImports": "always"
+    }
+  },
   "extensions": {
     "recommendations": [
       "christian-kohler.npm-intellisense",
