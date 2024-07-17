@@ -39,7 +39,8 @@
       "christian-kohler.path-intellisense",
       "burkeholland.simple-react-snippets",
       "dbaeumer.vscode-eslint",
-      "yoavbls.pretty-ts-errors"
+      "yoavbls.pretty-ts-errors",
+      "formulahendry.auto-complete-tag"
     ]
   }
 }
