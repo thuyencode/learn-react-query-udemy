@@ -1,0 +1,35 @@
+{
+  "folders": [
+    {
+      "path": "./base-blog-em"
+    },
+    {
+      "path": "./base-infinite-swapi"
+    },
+    {
+      "path": "./base-lazy-days"
+    },
+    {
+      "path": "./completed-apps"
+    },
+    {
+      "path": "./legacy-v3-code"
+    },
+    {
+      "path": "./section-start-code"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {},
+  "extensions": {
+    "recommendations": [
+      "christian-kohler.npm-intellisense",
+      "christian-kohler.path-intellisense",
+      "burkeholland.simple-react-snippets",
+      "dbaeumer.vscode-eslint",
+      "yoavbls.pretty-ts-errors"
+    ]
+  }
+}
