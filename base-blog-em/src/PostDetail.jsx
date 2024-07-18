@@ -46,7 +46,7 @@ export function PostDetail({ post, deleteMutation, updateMutation }) {
           <p className='error'>Error deleting the post.</p>
         ) : null}
 
-        {deleteMutation.status === 'success' ? (
+        {deleteMutation.isSuccess ? (
           <p className='success'>The post was (not) deleted.</p>
         ) : null}
       </div>
@@ -64,7 +64,7 @@ export function PostDetail({ post, deleteMutation, updateMutation }) {
           <p className='error'>Error updating the post.</p>
         ) : null}
 
-        {updateMutation.status === 'success' ? (
+        {updateMutation.isSuccess ? (
           <p className='success'>The post was (not) updated.</p>
         ) : null}
       </div>
