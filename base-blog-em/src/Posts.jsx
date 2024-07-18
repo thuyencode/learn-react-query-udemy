@@ -6,7 +6,7 @@ import {
   useQueryClient
 } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { deletePost, fetchPosts } from './api'
+import { deletePost, fetchPosts, updatePost } from './api'
 import { PostDetail } from './PostDetail'
 const maxPostPage = 10
 
@@ -37,6 +37,10 @@ export function Posts() {
     mutationFn: async (postId) => await deletePost(postId)
   })
 
+  const updateMutation = useMutation({
+    mutationFn: async (postId) => await updatePost(postId)
+  })
+
   useEffect(() => {
     queryClient.prefetchQuery(postsQuery(currentPage + 1))
   }, [currentPage])
@@ -63,6 +67,7 @@ export function Posts() {
             className='post-title'
             onClick={() => {
               deleteMutation.reset()
+              updateMutation.reset()
               setSelectedPost(post)
             }}
           >
@@ -91,7 +96,11 @@ export function Posts() {
       </div>
       <hr />
       {selectedPost && (
-        <PostDetail post={selectedPost} deleteMutation={deleteMutation} />
+        <PostDetail
+          post={selectedPost}
+          deleteMutation={deleteMutation}
+          updateMutation={updateMutation}
+        />
       )}
     </>
   )
