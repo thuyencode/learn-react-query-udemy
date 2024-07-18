@@ -3,7 +3,7 @@ import { fetchComments } from './api'
 import './PostDetail.css'
 
 /**
- * Description placeholder
+ * The `PostDetail` component
  *
  * @export
  * @param {{ post: any; deleteMutation: import('@tanstack/react-query').UseMutationResult; }} props
