@@ -1,19 +1,30 @@
-import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { fetchPosts } from './api'
 import { PostDetail } from './PostDetail'
 const maxPostPage = 10
 
-export function Posts() {
-  const [currentPage, setCurrentPage] = useState(0)
-  const [selectedPost, setSelectedPost] = useState(null)
-
-  // replace with useQuery
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['posts', { page: currentPage }],
-    queryFn: async () => await fetchPosts(currentPage),
+function postsQuery(page) {
+  return queryOptions({
+    queryKey: ['posts', { page: page }],
+    queryFn: async () => await fetchPosts(page),
     staleTime: 2000
   })
+}
+
+export function Posts() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedPost, setSelectedPost] = useState(null)
+
+  const queryClient = useQueryClient()
+
+  // replace with useQuery
+  const { data, isLoading, isError, error } = useQuery(postsQuery(currentPage))
+
+  useEffect(() => {
+    queryClient.prefetchQuery(postsQuery(currentPage + 1))
+  }, [currentPage])
 
   if (isLoading) {
     return <h2>Loading...</h2>
@@ -50,7 +61,7 @@ export function Posts() {
         >
           Previous page
         </button>
-        <span>Page {currentPage + 1}</span>
+        <span>Page {currentPage}</span>
         <button
           disabled={currentPage >= maxPostPage}
           onClick={() => {
