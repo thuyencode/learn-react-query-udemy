@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { fetchPosts } from './api'
+import { deletePost, fetchPosts } from './api'
 import { PostDetail } from './PostDetail'
 const maxPostPage = 10
 
@@ -27,6 +32,10 @@ export function Posts() {
 
   // replace with useQuery
   const { data, isLoading, isError, error } = useQuery(postsQuery(currentPage))
+
+  const deleteMutation = useMutation({
+    mutationFn: async (postId) => await deletePost(postId)
+  })
 
   useEffect(() => {
     queryClient.prefetchQuery(postsQuery(currentPage + 1))
@@ -78,7 +87,9 @@ export function Posts() {
         </button>
       </div>
       <hr />
-      {selectedPost && <PostDetail post={selectedPost} />}
+      {selectedPost && (
+        <PostDetail post={selectedPost} deleteMutation={deleteMutation} />
+      )}
     </>
   )
 }
