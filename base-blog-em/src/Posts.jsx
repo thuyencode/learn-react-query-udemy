@@ -5,9 +5,15 @@ import { fetchPosts } from './api'
 import { PostDetail } from './PostDetail'
 const maxPostPage = 10
 
+/**
+ * Query Options for fetching posts
+ *
+ * @param {number} page
+ * @returns {import('@tanstack/react-query').QueryOptions}
+ */
 function postsQuery(page) {
   return queryOptions({
-    queryKey: ['posts', { page: page }],
+    queryKey: ['posts', { page }],
     queryFn: async () => await fetchPosts(page),
     staleTime: 2000
   })
