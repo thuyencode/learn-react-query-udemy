@@ -18,13 +18,20 @@ const fetchUrl = async (url) => {
 }
 
 export function InfinitePeople() {
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading } =
-    useInfiniteQuery({
-      queryKey: ['api', 'people'],
-      queryFn: async ({ pageParam = initialUrl }) => await fetchUrl(pageParam),
-      getNextPageParam: (lastPage) =>
-        lastPage.next ? baseUrl + lastPage.next : undefined
-    })
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isLoading,
+    isError,
+    error
+  } = useInfiniteQuery({
+    queryKey: ['api', 'people'],
+    queryFn: async ({ pageParam = initialUrl }) => await fetchUrl(pageParam),
+    getNextPageParam: (lastPage) =>
+      lastPage.next ? baseUrl + lastPage.next : undefined
+  })
 
   function loadMore() {
     if (isFetching) {
@@ -35,29 +42,33 @@ export function InfinitePeople() {
   }
 
   if (isLoading) {
-    return <div className='loading'>Loading...</div>
+    return <h2 className='loading'>Loading...</h2>
   }
 
-  if (isFetching) {
-    return <div className='loading'>Fetching...</div>
+  if (isError) {
+    return <h2>Error! {error.toString()}</h2>
   }
 
   return (
-    <InfiniteScroll
-      initialLoad={false}
-      hasMore={hasNextPage}
-      loadMore={loadMore}
-    >
-      {data.pages.map((pageData) =>
-        pageData.results.map((person) => (
-          <Person
-            key={person.fields.name}
-            name={person.fields.name}
-            hairColor={person.fields.hair_color}
-            eyeColor={person.fields.eye_color}
-          />
-        ))
-      )}
-    </InfiniteScroll>
+    <>
+      <InfiniteScroll
+        initialLoad={false}
+        hasMore={hasNextPage}
+        loadMore={loadMore}
+      >
+        {data.pages.map((pageData) =>
+          pageData.results.map((person) => (
+            <Person
+              key={person.fields.name}
+              name={person.fields.name}
+              hairColor={person.fields.hair_color}
+              eyeColor={person.fields.eye_color}
+            />
+          ))
+        )}
+      </InfiniteScroll>
+
+      {isFetching ? <h2 className='loading'>Fetching...</h2> : null}
+    </>
   )
 }
