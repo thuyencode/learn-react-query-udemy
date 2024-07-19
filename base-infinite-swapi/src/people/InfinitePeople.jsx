@@ -1,21 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import InfiniteScroll from 'react-infinite-scroller'
+import { fetchUrl } from '../libs/api'
 import { Person } from './Person'
 
-const baseUrl = 'https://swapi-node.vercel.app'
-const initialUrl = baseUrl + '/api/people/'
-
-/**
- * The general fetcher
- *
- * @async
- * @param {string} url
- * @returns {Promise<unknown>}
- */
-const fetchUrl = async (url) => {
-  const response = await fetch(url)
-  return response.json()
-}
+const initialUrl = import.meta.env.VITE_BASE_API + '/api/people/'
 
 export function InfinitePeople() {
   const {
@@ -30,7 +18,7 @@ export function InfinitePeople() {
     queryKey: ['api', 'people'],
     queryFn: async ({ pageParam = initialUrl }) => await fetchUrl(pageParam),
     getNextPageParam: (lastPage) =>
-      lastPage.next ? baseUrl + lastPage.next : undefined
+      lastPage.next ? import.meta.env.VITE_BASE_API + lastPage.next : undefined
   })
 
   function loadMore() {
