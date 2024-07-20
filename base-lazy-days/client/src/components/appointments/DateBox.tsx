@@ -1,28 +1,28 @@
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack, Text } from '@chakra-ui/react'
 
-import type { Appointment as AppointmentType } from "@shared/types";
+import type { Appointment as AppointmentType } from '@shared/types'
 
-import { Appointment } from "./Appointment";
+import { Appointment } from './Appointment'
 
 interface DateBoxProps {
-  date: number;
-  gridColumn?: number;
-  appointments?: AppointmentType[];
+  date: number
+  gridColumn?: number
+  appointments?: AppointmentType[]
 }
-DateBox.defaultProps = { gridColumn: null, appointments: [] };
+DateBox.defaultProps = { gridColumn: null, appointments: [] }
 
 export function DateBox({ date, gridColumn, appointments = [] }: DateBoxProps) {
   return (
     <Box
-      w="100%"
+      w='100%'
       h={20}
-      bg="olive.50"
+      bg='olive.50'
       gridColumnStart={gridColumn}
-      boxShadow="md"
-      rounded="md"
+      boxShadow='md'
+      rounded='md'
     >
       <Stack m={2} spacing={1}>
-        <Text fontSize="xs" textAlign="right">
+        <Text fontSize='xs' textAlign='right'>
           {date}
         </Text>
         {appointments.map((appointment) => (
@@ -30,5 +30,5 @@ export function DateBox({ date, gridColumn, appointments = [] }: DateBoxProps) {
         ))}
       </Stack>
     </Box>
-  );
+  )
 }

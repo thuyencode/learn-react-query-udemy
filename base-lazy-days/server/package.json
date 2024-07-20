@@ -4,8 +4,8 @@
   "author": "Bonnie Schulkin",
   "license": "AGPL-3.0",
   "scripts": {
-    "start": "node src/index.cjs",
-    "dev": "npm start"
+    "start": "bun src/index.cjs",
+    "dev": "bun --watch src/index.cjs"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.8",
