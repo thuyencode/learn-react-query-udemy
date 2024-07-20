@@ -1,7 +1,6 @@
-import type { Treatment } from '@shared/types'
-
 import { axiosInstance } from '@/axiosInstance'
 import { queryKeys } from '@/react-query/constants'
+import type { Treatment } from '@shared/types'
 import { useQuery } from '@tanstack/react-query'
 
 // for when we need a query function for useQuery
