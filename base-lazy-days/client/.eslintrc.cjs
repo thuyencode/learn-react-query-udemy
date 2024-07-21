@@ -18,7 +18,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:vitest/recommended',
+    'plugin:vitest/legacy-recommended',
     'plugin:testing-library/react',
     'plugin:@tanstack/eslint-plugin-query/recommended'
   ],
