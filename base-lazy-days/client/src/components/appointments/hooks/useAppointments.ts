@@ -1,5 +1,6 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { AppointmentDateMap } from '../types'
 import { getMonthYearDetails, getNewMonthYear } from './monthYear'
@@ -7,7 +8,6 @@ import { getMonthYearDetails, getNewMonthYear } from './monthYear'
 import { useLoginData } from '@/auth/AuthContext'
 import { axiosInstance } from '@/axiosInstance'
 import { queryKeys } from '@/react-query/constants'
-import { useQuery } from '@tanstack/react-query'
 
 // for useQuery call
 async function getAppointments(
@@ -70,6 +70,22 @@ export function useAppointments() {
     ],
     queryFn: async () => await getAppointments(monthYear.year, monthYear.month)
   })
+
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const nextMonthYear = getNewMonthYear(monthYear, 1)
+
+    queryClient.prefetchQuery({
+      queryKey: [
+        queryKeys.appointments,
+        { year: nextMonthYear.year, month: nextMonthYear.month }
+      ],
+      queryFn: async () =>
+        await getAppointments(nextMonthYear.year, nextMonthYear.month)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [monthYear])
 
   /** ****************** END 3: useQuery  ******************************* */
 
