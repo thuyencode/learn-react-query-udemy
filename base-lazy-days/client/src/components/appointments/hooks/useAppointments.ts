@@ -10,6 +10,11 @@ import { useLoginData } from '@/auth/AuthContext'
 import { axiosInstance } from '@/axiosInstance'
 import { queryKeys } from '@/react-query/constants'
 
+const commonOptions = {
+  staleTime: 0,
+  gcTime: 1000 * 60 * 5
+}
+
 // for useQuery call
 async function getAppointments(
   year: string,
@@ -82,7 +87,9 @@ export function useAppointments() {
       { year: monthYear.year, month: monthYear.month }
     ],
     queryFn: async () => await getAppointments(monthYear.year, monthYear.month),
-    select: (data) => selectFn(data, showAll)
+    select: (data) => selectFn(data, showAll),
+    refetchOnWindowFocus: true,
+    ...commonOptions
   })
 
   const queryClient = useQueryClient()
@@ -96,7 +103,8 @@ export function useAppointments() {
         { year: nextMonthYear.year, month: nextMonthYear.month }
       ],
       queryFn: async () =>
-        await getAppointments(nextMonthYear.year, nextMonthYear.month)
+        await getAppointments(nextMonthYear.year, nextMonthYear.month),
+      ...commonOptions
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monthYear])
