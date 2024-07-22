@@ -1,26 +1,33 @@
-import { AxiosResponse } from "axios";
+import { useQuery } from '@tanstack/react-query'
+import { AxiosResponse } from 'axios'
 
-import type { User } from "@shared/types";
+import type { User } from '@shared/types'
 
-import { useLoginData } from "@/auth/AuthContext";
-import { axiosInstance, getJWTHeader } from "@/axiosInstance";
-import { queryKeys } from "@/react-query/constants";
+import { useLoginData } from '@/auth/AuthContext'
+import { axiosInstance, getJWTHeader } from '@/axiosInstance'
+import { generateUserKey } from '@/react-query/key-factories'
 
 // query function
-// async function getUser(userId: number, userToken: string) {
-//   const { data }: AxiosResponse<{ user: User }> = await axiosInstance.get(
-//     `/user/${userId}`,
-//     {
-//       headers: getJWTHeader(userToken),
-//     }
-//   );
+async function getUser(userId: number, userToken: string) {
+  const { data }: AxiosResponse<{ user: User }> = await axiosInstance.get(
+    `/user/${userId}`,
+    {
+      headers: getJWTHeader(userToken)
+    }
+  )
 
-//   return data.user;
-// }
+  return data.user
+}
 
 export function useUser() {
-  // TODO: call useQuery to update user data from server
-  const user: User = null;
+  const { userId, userToken } = useLoginData()
+
+  const { data: user } = useQuery({
+    queryKey: generateUserKey(userId, userToken),
+    queryFn: async () => await getUser(userId, userToken),
+    staleTime: Infinity,
+    enabled: !!userId
+  })
 
   // meant to be called from useAuth
   function updateUser(newUser: User): void {
@@ -32,5 +39,5 @@ export function useUser() {
     // TODO: reset user to null in query cache
   }
 
-  return { user, updateUser, clearUser };
+  return { user, updateUser, clearUser }
 }
