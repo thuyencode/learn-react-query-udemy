@@ -89,6 +89,7 @@ export function useAppointments() {
     queryFn: async () => await getAppointments(monthYear.year, monthYear.month),
     select: (data) => selectFn(data, showAll),
     refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 60,
     ...commonOptions
   })
 
