@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
 
 import type { User } from '@shared/types'
 
 import { useLoginData } from '@/auth/AuthContext'
 import { axiosInstance, getJWTHeader } from '@/axiosInstance'
+import { queryKeys } from '@/react-query/constants'
 import { generateUserKey } from '@/react-query/key-factories'
 
 // query function
@@ -20,6 +21,7 @@ async function getUser(userId: number, userToken: string) {
 }
 
 export function useUser() {
+  const queryClient = useQueryClient()
   const { userId, userToken } = useLoginData()
 
   const { data: user } = useQuery({
@@ -31,12 +33,15 @@ export function useUser() {
 
   // meant to be called from useAuth
   function updateUser(newUser: User): void {
-    // TODO: update the user in the query cache
+    queryClient.setQueryData(
+      generateUserKey(newUser.id, newUser.token),
+      newUser
+    )
   }
 
   // meant to be called from useAuth
   function clearUser() {
-    // TODO: reset user to null in query cache
+    queryClient.removeQueries({ queryKey: [queryKeys.user] })
   }
 
   return { user, updateUser, clearUser }
