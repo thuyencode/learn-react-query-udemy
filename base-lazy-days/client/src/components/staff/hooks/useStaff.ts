@@ -1,8 +1,12 @@
+import { useQuery } from '@tanstack/react-query'
+import { useCallback, useState } from 'react'
+
+import type { Staff } from '@shared/types'
+
+import { filterByTreatment } from '../utils'
+
 import { axiosInstance } from '@/axiosInstance'
 import { queryKeys } from '@/react-query/constants'
-import type { Staff } from '@shared/types'
-import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 
 // query function for useQuery
 async function getStaff(): Promise<Staff[]> {
@@ -15,9 +19,19 @@ export function useStaff() {
   const [filter, setFilter] = useState('all')
   const fallback: Staff[] = []
 
+  const selectFn = useCallback(
+    (unfilteredStaff: Staff[]) => {
+      if (filter === 'all') return unfilteredStaff
+
+      return filterByTreatment(unfilteredStaff, filter)
+    },
+    [filter]
+  )
+
   const { data: staff = fallback } = useQuery({
     queryKey: [queryKeys.staff],
-    queryFn: getStaff
+    queryFn: getStaff,
+    select: selectFn
   })
 
   return { staff, filter, setFilter }
