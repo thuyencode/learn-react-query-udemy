@@ -1,10 +1,11 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { Appointment } from '@shared/types'
 
 import { useLoginData } from '@/auth/AuthContext'
 import { axiosInstance } from '@/axiosInstance'
 import { useCustomToast } from '@/components/app/hooks/useCustomToast'
+import { queryKeys } from '@/react-query/constants'
 
 /**
  * For when we need functions for `useMutation`
@@ -30,11 +31,14 @@ export function useReserveAppointment() {
   const { userId } = useLoginData()
   const toast = useCustomToast()
 
+  const queryClient = useQueryClient()
+
   const { mutate } = useMutation({
     mutationFn: async (appointment: Appointment) => {
       await setAppointmentUser(appointment, userId)
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKeys.appointments] })
       toast({ title: 'You have reserved an appointment!', status: 'success' })
     }
   })
