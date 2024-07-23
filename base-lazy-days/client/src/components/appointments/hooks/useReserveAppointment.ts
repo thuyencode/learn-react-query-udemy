@@ -1,30 +1,43 @@
-import { Appointment } from "@shared/types";
+import { useMutation } from '@tanstack/react-query'
 
-import { useLoginData } from "@/auth/AuthContext";
-import { axiosInstance } from "@/axiosInstance";
-import { useCustomToast } from "@/components/app/hooks/useCustomToast";
-import { queryKeys } from "@/react-query/constants";
+import { Appointment } from '@shared/types'
 
-// for when we need functions for useMutation
-// async function setAppointmentUser(
-//   appointment: Appointment,
-//   userId: number | undefined,
-// ): Promise<void> {
-//   if (!userId) return;
-//   const patchOp = appointment.userId ? 'replace' : 'add';
-//   const patchData = [{ op: patchOp, path: '/userId', value: userId }];
-//   await axiosInstance.patch(`/appointment/${appointment.id}`, {
-//     data: patchData,
-//   });
-// }
+import { useLoginData } from '@/auth/AuthContext'
+import { axiosInstance } from '@/axiosInstance'
+import { useCustomToast } from '@/components/app/hooks/useCustomToast'
+
+/**
+ * For when we need functions for `useMutation`
+ *
+ * @async
+ * @param {Appointment} appointment
+ * @param {(number | undefined)} userId
+ * @returns {Promise<void>}
+ */
+async function setAppointmentUser(
+  appointment: Appointment,
+  userId: number | undefined
+): Promise<void> {
+  if (!userId) return
+  const patchOp = appointment.userId ? 'replace' : 'add'
+  const patchData = [{ op: patchOp, path: '/userId', value: userId }]
+  await axiosInstance.patch(`/appointment/${appointment.id}`, {
+    data: patchData
+  })
+}
 
 export function useReserveAppointment() {
-  const { userId } = useLoginData();
+  const { userId } = useLoginData()
+  const toast = useCustomToast()
 
-  const toast = useCustomToast();
+  const { mutate } = useMutation({
+    mutationFn: async (appointment: Appointment) => {
+      await setAppointmentUser(appointment, userId)
+    },
+    onSuccess: () => {
+      toast({ title: 'You have reserved an appointment!', status: 'success' })
+    }
+  })
 
-  // TODO: replace with mutate function
-  return (appointment: Appointment) => {
-    // nothing to see here
-  };
+  return mutate
 }
