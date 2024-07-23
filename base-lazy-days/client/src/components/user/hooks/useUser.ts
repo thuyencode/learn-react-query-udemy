@@ -25,7 +25,8 @@ export function useUser() {
   const { userId, userToken } = useLoginData()
 
   const { data: user } = useQuery({
-    queryKey: generateUserKey(userId, userToken),
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: generateUserKey(userId),
     queryFn: async () => await getUser(userId, userToken),
     staleTime: Infinity,
     enabled: !!userId
@@ -33,10 +34,7 @@ export function useUser() {
 
   // meant to be called from useAuth
   function updateUser(newUser: User): void {
-    queryClient.setQueryData(
-      generateUserKey(newUser.id, newUser.token),
-      newUser
-    )
+    queryClient.setQueryData(generateUserKey(newUser.id), newUser)
   }
 
   // meant to be called from useAuth
