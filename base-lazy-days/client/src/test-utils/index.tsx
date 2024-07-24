@@ -1,7 +1,8 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { render as RtlRender } from "@testing-library/react";
-import { PropsWithChildren, ReactElement } from "react";
-import { MemoryRouter } from "react-router-dom";
+import { ChakraProvider } from '@chakra-ui/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render as RtlRender } from '@testing-library/react'
+import { ReactElement } from 'react'
+import { MemoryRouter } from 'react-router-dom'
 
 // ** FOR TESTING CUSTOM HOOKS ** //
 // from https://tkdodo.eu/blog/testing-react-query#for-custom-hooks
@@ -12,18 +13,27 @@ import { MemoryRouter } from "react-router-dom";
 //   );
 // };
 
+function generateQueryClient() {
+  return new QueryClient()
+}
+
 // reference: https://testing-library.com/docs/react-testing-library/setup#custom-render
-function customRender(ui: ReactElement) {
+function customRender(
+  ui: ReactElement,
+  queryClient: QueryClient = generateQueryClient()
+) {
   return RtlRender(
     <ChakraProvider>
-      <MemoryRouter>{ui}</MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>{ui}</MemoryRouter>
+      </QueryClientProvider>
     </ChakraProvider>
-  );
+  )
 }
 
 // re-export everything
 // eslint-disable-next-line react-refresh/only-export-components
-export * from "@testing-library/react";
+export * from '@testing-library/react'
 
 // override render method
-export { customRender as render };
+export { customRender as render }
