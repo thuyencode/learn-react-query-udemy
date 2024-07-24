@@ -1,10 +1,41 @@
-// import { act, renderHook, waitFor } from "@testing-library/react";
+import { AppointmentDateMap } from '@shared/types'
 
-import { useAppointments } from "../hooks/useAppointments";
-import { AppointmentDateMap } from "../types";
+import { useAppointments } from '../hooks/useAppointments'
 
-// import { createQueryClientWrapper } from "@/test-utils";
+import {
+  act,
+  createQueryClientWrapper,
+  renderHook,
+  waitFor
+} from '@/test-utils'
 
-test("filter appointments by availability", async () => {
-  // test goes here
-});
+const getAppointmentCount = (appointments: AppointmentDateMap) =>
+  Object.values(appointments).reduce(
+    (runningCount, appointmentsOnDate) =>
+      runningCount + appointmentsOnDate.length,
+    0
+  )
+
+test('filter appointments by availability', async () => {
+  const { result } = renderHook(() => useAppointments(), {
+    wrapper: createQueryClientWrapper()
+  })
+
+  await waitFor(() =>
+    expect(getAppointmentCount(result.current.appointments)).toBeGreaterThan(0)
+  )
+
+  const filteredAppointmentsLength = getAppointmentCount(
+    result.current.appointments
+  )
+
+  act(() => {
+    result.current.setShowAll(true)
+  })
+
+  await waitFor(() =>
+    expect(getAppointmentCount(result.current.appointments)).toBeGreaterThan(
+      filteredAppointmentsLength
+    )
+  )
+})

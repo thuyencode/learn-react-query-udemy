@@ -1,19 +1,23 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render as RtlRender } from '@testing-library/react'
-import { ReactElement } from 'react'
+import { PropsWithChildren, ReactElement } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
 import { queryConfig } from '@/react-query/queryClient'
 
-// ** FOR TESTING CUSTOM HOOKS ** //
-// from https://tkdodo.eu/blog/testing-react-query#for-custom-hooks
-// export const createQueryClientWrapper = () => {
-//   const queryClient = generateQueryClient();
-//   return ({ children }: PropsWithChildren) => (
-//     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-//   );
-// };
+/**
+ * For testing custom hooks
+ *
+ * @see {@link https://tkdodo.eu/blog/testing-react-query#for-custom-hooks}
+ * @returns {({ children }: PropsWithChildren) => ReactElement}
+ */
+export const createQueryClientWrapper = () => {
+  const queryClient = generateQueryClient()
+  return ({ children }: PropsWithChildren) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
+}
 
 function generateQueryClient() {
   return new QueryClient({
