@@ -4,6 +4,8 @@ import { render as RtlRender } from '@testing-library/react'
 import { ReactElement } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 
+import { queryConfig } from '@/react-query/queryClient'
+
 // ** FOR TESTING CUSTOM HOOKS ** //
 // from https://tkdodo.eu/blog/testing-react-query#for-custom-hooks
 // export const createQueryClientWrapper = () => {
@@ -14,7 +16,10 @@ import { MemoryRouter } from 'react-router-dom'
 // };
 
 function generateQueryClient() {
-  return new QueryClient()
+  return new QueryClient({
+    ...queryConfig,
+    defaultOptions: { queries: { retry: false } }
+  })
 }
 
 // reference: https://testing-library.com/docs/react-testing-library/setup#custom-render
